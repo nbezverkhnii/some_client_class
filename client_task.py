@@ -10,7 +10,7 @@ class Item:
 
 
 class SomeClient:
-    def get_object(self, item_id) -> Item:
+    def get_object(self, item_id: int) -> Item:
         time.sleep(1)
         return Item(item_id, "name")
 
@@ -23,7 +23,8 @@ class SomeClient:
 
 
 class CachedClient:
-    def __init__(self):
+    def __init__(self, client: SomeClient):
+        self.client = client
         self.cache = dict()
         self.list_count = 0
 
@@ -33,8 +34,10 @@ class CachedClient:
             return self.cache[item_id]
 
         time.sleep(1)
-        self.cache[item_id] = Item(item_id, "name")
-        return Item(item_id, "name")
+        g_object = self.client.get_object(item_id)
+        # add an item to the cache
+        self.cache[item_id] = g_object
+        return g_object
 
     def list_objects(self) -> List[Item]:
         if self.list_count > 0:
@@ -42,9 +45,12 @@ class CachedClient:
             return [v for k, v in self.cache.items()]
 
         time.sleep(1)
-        self.cache.update({i: Item(i, "name") for i in range(10)})
+        result_list = self.client.list_objects()
+        # add items to the cache
+        for item in result_list:
+            self.cache.update({item.id: item})
         self.list_count += 1
-        return [Item(i, "name") for i in range(10)]
+        return result_list
 
     def put_object(self, item: Item) -> None:
         item_id = item.id
@@ -56,7 +62,8 @@ class CachedClient:
 
 
 def main():
-    Cclient = CachedClient()
+    some_client = SomeClient()
+    Cclient = CachedClient(some_client)
     print(Cclient.get_object(2))
     print(Cclient.get_object(2))
     print(Cclient.cache)
