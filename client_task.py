@@ -33,7 +33,6 @@ class CachedClient:
             print(f'Get {item_id} from cache')
             return self.cache[item_id]
 
-        time.sleep(1)
         g_object = self.client.get_object(item_id)
         # add an item to the cache
         self.cache[item_id] = g_object
@@ -44,7 +43,6 @@ class CachedClient:
             print('Get list from cache')
             return [v for k, v in self.cache.items()]
 
-        time.sleep(1)
         result_list = self.client.list_objects()
         # add items to the cache
         for item in result_list:
@@ -57,8 +55,9 @@ class CachedClient:
         if item_id in self.cache:
             print('Put in cache')
             self.cache[item_id] = item
+            return
 
-        time.sleep(1)
+        self.client.put_object(item)
 
 
 def main():
