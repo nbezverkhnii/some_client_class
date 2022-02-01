@@ -30,7 +30,6 @@ class CachedClient:
 
     def get_object(self, item_id: int) -> Item:
         if item_id in self.cache:
-            print(f'Get {item_id} from cache')
             return self.cache[item_id]
 
         g_object = self.client.get_object(item_id)
@@ -40,7 +39,6 @@ class CachedClient:
 
     def list_objects(self) -> List[Item]:
         if self.list_count > 0:
-            print('Get list from cache')
             return [v for k, v in self.cache.items()]
 
         result_list = self.client.list_objects()
@@ -53,24 +51,22 @@ class CachedClient:
     def put_object(self, item: Item) -> None:
         item_id = item.id
         if item_id in self.cache:
-            print('Put in cache')
             self.cache[item_id] = item
-            return
 
         self.client.put_object(item)
 
 
 def main():
     some_client = SomeClient()
-    Cclient = CachedClient(some_client)
-    print(Cclient.get_object(2))
-    print(Cclient.get_object(2))
-    print(Cclient.cache)
-    print(Cclient.list_objects())
-    print(Cclient.cache)
-    print(Cclient.list_objects())
-    Cclient.put_object(Item(id=2, name='name_2!!'))
-    print(Cclient.cache)
+    client = CachedClient(some_client)
+    print(client.get_object(2))
+    print(client.get_object(2))
+    print(client.cache)
+    print(client.list_objects())
+    print(client.cache)
+    print(client.list_objects())
+    client.put_object(Item(id=2, name='name_2!!'))
+    print(client.cache)
 
 
 if __name__ == '__main__':
