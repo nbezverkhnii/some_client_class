@@ -35,16 +35,3 @@ def some_client_mock(item_1, items_list, mocker):
 @pytest.fixture(name='cached_client')
 def cached_client_with_empty_cache(some_client_mock):
     return CachedClient(some_client_mock)
-
-
-@pytest.fixture()
-def cached_client_with_get_cache(cached_client):
-    setattr(cached_client, 'cache', {1: Item(1, 'name')})
-    return cached_client
-
-
-@pytest.fixture()
-def cached_client_with_list_cache(cached_client):
-    setattr(cached_client, 'cache', {i: Item(i, "name") for i in range(10)})
-    setattr(cached_client, 'list_count', 1)
-    return cached_client

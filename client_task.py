@@ -56,7 +56,7 @@ class CachedClient:
         self.client.put_object(item)
 
 
-def main():
+def dry_run() -> None:
     some_client = SomeClient()
     client = CachedClient(some_client)
     print(client.get_object(2))
@@ -70,4 +70,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    dry_run()
